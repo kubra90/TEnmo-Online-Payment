@@ -8,5 +8,5 @@ public interface AccountDAO {
 
     //all CRUD methods!!!
 
-    Account getAccountBalance(int accountId);
+    Account getAccountBalance(int userId);
 }
