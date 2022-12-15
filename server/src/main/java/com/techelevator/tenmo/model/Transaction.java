@@ -14,15 +14,27 @@ public class Transaction {
     private int toUserAccount;
     private BigDecimal transactionAmount;
 
-    public Transaction(int transactionId, int fromAccount, int toUserAccount, BigDecimal transactionAmount) {
+
+    private String status = "APPROVED";
+
+    public Transaction(int transactionId, int fromAccount, int toUserAccount, BigDecimal transactionAmount, String status) {
         this.transactionId = transactionId;
         this.fromAccount = fromAccount;
-        this.toUserAccount = toUserAccount; //account_id
+        this.toUserAccount = toUserAccount;
         this.transactionAmount = transactionAmount;
+        this.status = status;
     }
 
     public Transaction(){
 
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getTransactionId() {

@@ -1,11 +1,12 @@
 package com.techelevator.tenmo.controller;
 
 
+import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransactionDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transaction;
 import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.transactionCheck.transactionCheck;
+import com.techelevator.tenmo.transactionCheck.TransactionCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,33 +25,33 @@ public class TransactionController {
     private TransactionDao transactionDao;
     @Autowired
     private UserDao userDao;
-    private transactionCheck transactionCheck;
+
+    @Autowired
+    private AccountDAO accountDAO;
+
 
     //method handler for transaction
-    @RequestMapping(path = "/tenmo", method = RequestMethod.POST )
+    //specific name!
+    @RequestMapping(path = "/send", method = RequestMethod.POST)
     public Transaction createTransaction(@RequestBody Transaction transaction) {
-        return transactionDao.create(transaction);
-
+         accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
+         accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+         Transaction transaction1 =transactionDao.create(transaction);
+         return transaction1;
     }
 
     // get all users for transactions
-    @RequestMapping(path ="/tenmo", method =RequestMethod.GET)
+    @RequestMapping(path = "/users", method = RequestMethod.GET)
     public List<String> getAllUsers() {
         List<String> users = new ArrayList<>();
         List<User> allUsers = userDao.findAll();
-        for(User user : allUsers){
-           users.add(user.getUsername());
+        for (User user : allUsers) {
+            users.add(user.getUsername());
         }
-        return  users;
-    }
-    //update balance
-    @RequestMapping(path ="/tenmo", method = RequestMethod.PUT)
-    public void updateBalance(@RequestBody Transaction transaction){
-        transactionCheck.performTransaction(transaction);
-        updateBalance(transaction);
+        return users;
     }
 
 
 
+    }
 
-}

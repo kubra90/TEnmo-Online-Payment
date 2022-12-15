@@ -1,11 +1,13 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transaction;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class JdbcAccountDAO implements AccountDAO{
@@ -28,13 +30,37 @@ public class JdbcAccountDAO implements AccountDAO{
 
     }
 
+    @Override
+    public Account getAccountBalanceByAccountId(int accountId) {
+        Account account = new Account();
+        String sql = "SELECT * FROM account WHERE user_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        if(result.next()){
+            account =mapRowToAccount(result);
+        }
+        return account;
+    }
 
-    //for the increase in the amount
-    //createTransaction, but it should d
-    //@Override
-  //  public BigDecimal updateBalanceByIncrease(Account account) {
 
-    //}
+    @Override
+    public void addBalance(BigDecimal amount, int accountId) {
+        String sql = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
+
+        jdbcTemplate.update(sql, amount, accountId);
+    }
+
+    @Override
+      public void substractBalance(BigDecimal amount, int accountId){
+      String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?;";
+
+        jdbcTemplate.update(sql, amount, accountId);
+}
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return null;
+    }
+
 
 
     //we need to add map row to account to get all records, account object.

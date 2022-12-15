@@ -3,6 +3,7 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface AccountDAO {
 
@@ -12,6 +13,14 @@ public interface AccountDAO {
 
     //update balance acc. to the transaction! AccountId is receiver's id!
     //public boolean updateBalanceByIncrease(Account account);
+
+   Account getAccountBalanceByAccountId(int accountId);
+
+   List<Account> getAllAccounts();
+
+    void addBalance(BigDecimal amount, int accountId);
+    public void substractBalance(BigDecimal amount, int accountId);
+
 
 
     //method having transaction amount with account id

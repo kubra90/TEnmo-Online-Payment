@@ -1,15 +1,11 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transaction;
-import com.techelevator.tenmo.transactionCheck.transactionCheck;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 
 @Component
@@ -26,10 +22,10 @@ public class JdbcTransactionDao implements TransactionDao{
     public Transaction create(Transaction transaction) {
         Transaction transaction1 = new Transaction();
         String sql = "INSERT INTO transaction(from_user_account, to_user_account," +
-                " transaction_amount) VALUES (?, ?, ?) RETURNING transaction_id;";
+                " transaction_amount, transaction_status) VALUES (?, ?, ?, ?) RETURNING transaction_id;";
 
         Integer transaction_id = jdbcTemplate.queryForObject(sql, Integer.class, transaction.getFromAccount(), transaction.getToUserAccount(),
-                transaction.getTransactionAmount());
+                transaction.getTransactionAmount(), transaction.getStatus());
         //check transaction from the account to to_account to be different, not the same.
          if(getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount()){
             return getTransaction(transaction_id);
@@ -39,14 +35,6 @@ public class JdbcTransactionDao implements TransactionDao{
 
     }
 
-    @Override
-    public void update(Transaction updatedTransaction) {
-
-        String sql = "UPDATE account SET balance = ?"+
-                " WHERE account_id IN (Select to_user_account from transaction);";
-
-        jdbcTemplate.update(sql,updatedTransaction.getToUserAccount(), updatedTransaction.getFromAccount(), updatedTransaction.getTransactionAmount());
-    }
 
     @Override
     public Transaction getTransaction(int transactionId) {
@@ -60,25 +48,8 @@ public class JdbcTransactionDao implements TransactionDao{
         return transaction;
     }
 
+    // transaction status
 
-    //update transaction
-    //@Override
-    //public Transaction updateReceiverBalance(Transaction transaction) {
-
-        //add receiver account balance increase by the amount of transaction.
-        //with this query, receiver's account...
-        //call performTransaction here
-
-
-
-    //}
-
-
-
-    //@Override
-    //public List<Transaction> getAllTransaction(int transactionId) {
-      //  return null;
-    //}
 
     private Transaction mapRowToTransaction(SqlRowSet rowSet) {
         Transaction transaction = new Transaction();
@@ -86,6 +57,7 @@ public class JdbcTransactionDao implements TransactionDao{
         transaction.setFromAccount(rowSet.getInt("from_user_account"));
         transaction.setToUserAccount(rowSet.getInt("to_user_account"));
         transaction.setTransactionAmount(rowSet.getBigDecimal("transaction_amount"));
+        transaction.setStatus(rowSet.getString("transaction_status"));
         return transaction;
 }
 

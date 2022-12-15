@@ -10,8 +10,7 @@ public interface TransactionDao {
 
     Transaction create(Transaction transaction); //@valid
 
-    void update(Transaction updatedTransaction);
-
     Transaction getTransaction(int transactionId);
+
 
 }
