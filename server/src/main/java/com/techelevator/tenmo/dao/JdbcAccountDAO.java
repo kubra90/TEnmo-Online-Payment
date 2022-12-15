@@ -13,6 +13,7 @@ public class JdbcAccountDAO implements AccountDAO{
     JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDAO(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate =jdbcTemplate;
     }
 
     @Override
@@ -27,22 +28,13 @@ public class JdbcAccountDAO implements AccountDAO{
 
     }
 
-    @Override
-    public boolean updateBalanceByIncrease(Account account) {
-        BigDecimal balance = account.getBalance();
-        String sql = "UPDATE account SET balance = balance + ?" +
-                " WHERE account_id IN (SELECT to_user_account FROM transaction);";
 
+    //for the increase in the amount
+    //createTransaction, but it should d
+    //@Override
+  //  public BigDecimal updateBalanceByIncrease(Account account) {
 
-        boolean result = false;
-        int linesReturned =jdbcTemplate.update(sql, account.getAccountId(), account.getUserId(), account.getBalance());
-        if(linesReturned == 1){
-            result = true;
-
-        }
-        return result;
-
-    }
+    //}
 
 
     //we need to add map row to account to get all records, account object.

@@ -1,17 +1,23 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transaction;
+import com.techelevator.tenmo.transactionCheck.transactionCheck;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 
 @Component
 public class JdbcTransactionDao implements TransactionDao{
 
     JdbcTemplate jdbcTemplate;
+
+    private AccountDAO accountDAO;
 
     public JdbcTransactionDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -31,7 +37,15 @@ public class JdbcTransactionDao implements TransactionDao{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
         }
 
-       //return getTransaction(transaction_id);
+    }
+
+    @Override
+    public void update(Transaction updatedTransaction) {
+
+        String sql = "UPDATE account SET balance = ?"+
+                " WHERE account_id IN (Select to_user_account from transaction);";
+
+        jdbcTemplate.update(sql,updatedTransaction.getToUserAccount(), updatedTransaction.getFromAccount(), updatedTransaction.getTransactionAmount());
     }
 
     @Override
@@ -46,7 +60,27 @@ public class JdbcTransactionDao implements TransactionDao{
         return transaction;
     }
 
-private Transaction mapRowToTransaction(SqlRowSet rowSet) {
+
+    //update transaction
+    //@Override
+    //public Transaction updateReceiverBalance(Transaction transaction) {
+
+        //add receiver account balance increase by the amount of transaction.
+        //with this query, receiver's account...
+        //call performTransaction here
+
+
+
+    //}
+
+
+
+    //@Override
+    //public List<Transaction> getAllTransaction(int transactionId) {
+      //  return null;
+    //}
+
+    private Transaction mapRowToTransaction(SqlRowSet rowSet) {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(rowSet.getInt("transaction_id"));
         transaction.setFromAccount(rowSet.getInt("from_user_account"));
