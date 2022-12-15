@@ -34,13 +34,15 @@ public class AccountController {
     @RequestMapping(path = "/tenmo/balance", method = RequestMethod.GET)
     public Account getAccountBalance(Principal principal) {
         Account account;
-        User user = userDao.findByUsername(principal.getName()) ;
+        User user = userDao.findByUsername(principal.getName());
         int userId = user.getId();
-       account = accountDao.getAccountBalance(userId);
+        account = accountDao.getAccountBalance(userId);
+        if(accountDao.updateBalanceByIncrease(account)){
+            account.setBalance(account.getBalance() + );
+        }
         if (account == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found!");
-        } else {
-           return account;
         }
+        return account;
     }
 }
