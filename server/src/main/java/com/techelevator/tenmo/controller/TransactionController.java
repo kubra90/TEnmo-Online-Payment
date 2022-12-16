@@ -8,12 +8,12 @@ import com.techelevator.tenmo.model.Transaction;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.transactionCheck.TransactionCheck;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,20 @@ public class TransactionController {
 
     @RequestMapping(path ="/tenmo/transactionsbyuser", method = RequestMethod.GET)
     public List<Transaction> getAllTransactionsByUser(Principal  principal) {
-      return transactionDao.getTransactionsByUserId(principal.getName());
+      return  transactionDao.getTransactionsByUserName(principal.getName());
+    }
+
+    //7. question.. get specific  transaction with the id
+
+    @RequestMapping(path = "/tenmo/transaction/{id}", method = RequestMethod.GET)
+    public Transaction getTransactionById(@PathVariable @Valid int id) {
+        Transaction transaction = transactionDao.getTransaction(id);
+        if(transaction == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }else {
+            return transaction;
+        }
+
     }
 
 

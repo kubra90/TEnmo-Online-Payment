@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 public class Transaction {
 
+    @Valid
     private int transactionId;
 
     @Valid

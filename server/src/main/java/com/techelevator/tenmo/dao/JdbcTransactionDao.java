@@ -55,7 +55,7 @@ public class JdbcTransactionDao implements TransactionDao{
     }
 
     @Override
-    public List<Transaction> getTransactionsByUserId(String userName) {
+    public List<Transaction> getTransactionsByUserName(String userName) {
 
         List<Transaction> transactions = new ArrayList<>();
 
@@ -71,7 +71,21 @@ public class JdbcTransactionDao implements TransactionDao{
            Transaction transaction =mapRowToTransaction(result);
            transactions.add(transaction);
        }
-       return transactions;
+
+        // get transaction of sender
+        String sql2 = " SELECT * from transaction "+
+                " JOIN account ON account.account_id = transaction.from_user_account "+
+                " JOIN tenmo_user as tu ON tu.user_id = account.user_id "+
+                "WHERE tu.username = ?;";
+
+        SqlRowSet resultNew=jdbcTemplate.queryForRowSet(sql2, userName);
+
+        while(resultNew.next()){
+            Transaction transaction =mapRowToTransaction(resultNew);
+            transactions.add(transaction);
+        }
+        return transactions;
+
     }
 
 
