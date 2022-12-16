@@ -39,7 +39,7 @@ public class JdbcTransactionDao implements TransactionDao{
         int accountId = transaction.getFromAccount();
 
         Account account = accountDAO.getAccountBalanceByAccountId(accountId);
-        System.out.println(account.getBalance());
+        //System.out.println(account.getBalance());
         BigDecimal currentBalance = account.getBalance();
         if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
                 (getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount()) &&
