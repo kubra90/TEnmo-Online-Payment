@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +35,12 @@ public class TransactionController {
     //specific name!
     @RequestMapping(path = "/send", method = RequestMethod.POST)
     public Transaction createTransaction(@RequestBody Transaction transaction) {
-         accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
-         accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
-         Transaction transaction1 =transactionDao.create(transaction);
-         return transaction1;
-    }
+
+        accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
+        accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+        Transaction transaction1 = transactionDao.create(transaction);
+        return transaction1;
+        }
 
     // get all users for transactions
     @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -49,6 +51,11 @@ public class TransactionController {
             users.add(user.getUsername());
         }
         return users;
+    }
+
+    @RequestMapping(path ="/tenmo/transactionsbyuser", method = RequestMethod.GET)
+    public List<Transaction> getAllTransactionsByUser(Principal  principal) {
+      return transactionDao.getTransactionsByUserId(principal.getName());
     }
 
 

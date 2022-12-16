@@ -7,6 +7,10 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Component
 public class JdbcTransactionDao implements TransactionDao{
@@ -27,13 +31,15 @@ public class JdbcTransactionDao implements TransactionDao{
         Integer transaction_id = jdbcTemplate.queryForObject(sql, Integer.class, transaction.getFromAccount(), transaction.getToUserAccount(),
                 transaction.getTransactionAmount(), transaction.getStatus());
         //check transaction from the account to to_account to be different, not the same.
-         if(getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount()){
-            return getTransaction(transaction_id);
-        }else{
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
-        }
-
-    }
+          if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
+                  (getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount())) {
+              return getTransaction(transaction_id);
+          } else{
+                  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
+              }
+          //we should check balance amount and transaction amount too!
+          // (accountDAO.getAccountBalanceByAccountId(transaction.getFromAccount()).compareTo(transaction.getTransactionAmount()) == 1)){
+              }
 
 
     @Override
@@ -48,7 +54,28 @@ public class JdbcTransactionDao implements TransactionDao{
         return transaction;
     }
 
-    // transaction status
+    @Override
+    public List<Transaction> getTransactionsByUserId(String userName) {
+
+        List<Transaction> transactions = new ArrayList<>();
+
+        // get transaction of receiver
+        String sql = " SELECT * from transaction "+
+                " JOIN account ON account.account_id = transaction.to_user_account "+
+                " JOIN tenmo_user as tu ON tu.user_id = account.user_id "+
+                "WHERE tu.username = ?;";
+
+        SqlRowSet result=jdbcTemplate.queryForRowSet(sql, userName);
+
+       while(result.next()){
+           Transaction transaction =mapRowToTransaction(result);
+           transactions.add(transaction);
+       }
+       return transactions;
+    }
+
+
+
 
 
     private Transaction mapRowToTransaction(SqlRowSet rowSet) {

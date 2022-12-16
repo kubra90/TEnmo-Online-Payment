@@ -12,5 +12,7 @@ public interface TransactionDao {
 
     Transaction getTransaction(int transactionId);
 
+    List<Transaction> getTransactionsByUserId(String name);
+
 
 }
