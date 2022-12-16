@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -17,6 +19,8 @@ public class JdbcTransactionDao implements TransactionDao{
 
     JdbcTemplate jdbcTemplate;
 
+
+    @Autowired // the object, otherwise constructor needed
     private AccountDAO accountDAO;
 
     public JdbcTransactionDao(JdbcTemplate jdbcTemplate) {
@@ -24,22 +28,27 @@ public class JdbcTransactionDao implements TransactionDao{
     }
     @Override
     public Transaction create(Transaction transaction) {
-        Transaction transaction1 = new Transaction();
+        //Transaction transaction1 = new Transaction();
         String sql = "INSERT INTO transaction(from_user_account, to_user_account," +
                 " transaction_amount, transaction_status) VALUES (?, ?, ?, ?) RETURNING transaction_id;";
 
         Integer transaction_id = jdbcTemplate.queryForObject(sql, Integer.class, transaction.getFromAccount(), transaction.getToUserAccount(),
                 transaction.getTransactionAmount(), transaction.getStatus());
         //check transaction from the account to to_account to be different, not the same.
-          if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
-                  (getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount())) {
-              return getTransaction(transaction_id);
-          } else{
-                  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
-              }
-          //we should check balance amount and transaction amount too!
-          // (accountDAO.getAccountBalanceByAccountId(transaction.getFromAccount()).compareTo(transaction.getTransactionAmount()) == 1)){
-              }
+
+        int accountId = transaction.getFromAccount();
+
+        Account account = accountDAO.getAccountBalanceByAccountId(accountId);
+        System.out.println(account.getBalance());
+        BigDecimal currentBalance = account.getBalance();
+        if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
+                (getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount()) &&
+                currentBalance.compareTo(transaction.getTransactionAmount()) == 1) {
+            return getTransaction(transaction_id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
+        }
+    }
 
 
     @Override
