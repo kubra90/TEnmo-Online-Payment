@@ -33,7 +33,11 @@ public class TransactionController {
     @Autowired
     private final TransactionCheck check;
 
+<<<<<<< HEAD
    public TransactionController(TransactionCheck check) {
+=======
+    public TransactionController(TransactionCheck check) {
+>>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
         this.check = check;
     }
 
@@ -57,7 +61,10 @@ public class TransactionController {
             return transaction1;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+<<<<<<< HEAD
         }
+=======
+>>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
         }
     }
 
