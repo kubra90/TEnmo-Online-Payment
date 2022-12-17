@@ -30,16 +30,34 @@ public class TransactionController {
     @Autowired
     private AccountDAO accountDAO;
 
+    @Autowired
+    private final TransactionCheck check;
+
+   public TransactionController(TransactionCheck check) {
+        this.check = check;
+    }
+
 
     //method handler for transaction
     //specific name!
     @RequestMapping(path = "/send", method = RequestMethod.POST)
     public Transaction createTransaction(@RequestBody Transaction transaction) {
-
-        accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
-        accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
-        Transaction transaction1 = transactionDao.create(transaction);
-        return transaction1;
+       /*
+        int accountId = transaction.getFromAccount();
+        Account account = accountDAO.getAccountBalanceByAccountId(accountId);
+        BigDecimal currentBalance = account.getBalance();
+        if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
+                (transaction.getFromAccount() != transaction.getToUserAccount()) &&
+                (currentBalance.compareTo(transaction.getTransactionAmount()) >= 0)) {
+*/
+        if(check.checkTransaction(transaction)){
+            accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
+            accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+            Transaction transaction1 = transactionDao.create(transaction);
+            return transaction1;
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         }
 
     // get all users for transactions

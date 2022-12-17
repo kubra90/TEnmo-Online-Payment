@@ -28,27 +28,19 @@ public class JdbcTransactionDao implements TransactionDao{
     }
     @Override
     public Transaction create(Transaction transaction) {
+
         //Transaction transaction1 = new Transaction();
         String sql = "INSERT INTO transaction(from_user_account, to_user_account," +
                 " transaction_amount, transaction_status) VALUES (?, ?, ?, ?) RETURNING transaction_id;";
 
         Integer transaction_id = jdbcTemplate.queryForObject(sql, Integer.class, transaction.getFromAccount(), transaction.getToUserAccount(),
                 transaction.getTransactionAmount(), transaction.getStatus());
-        //check transaction from the account to to_account to be different, not the same.
 
-        int accountId = transaction.getFromAccount();
 
-        Account account = accountDAO.getAccountBalanceByAccountId(accountId);
-        //System.out.println(account.getBalance());
-        BigDecimal currentBalance = account.getBalance();
-        if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
-                (getTransaction(transaction_id).getFromAccount() != getTransaction(transaction_id).getToUserAccount()) &&
-                currentBalance.compareTo(transaction.getTransactionAmount()) == 1) {
             return getTransaction(transaction_id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
         }
-    }
+            //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
+
 
 
     @Override
