@@ -33,11 +33,9 @@ public class TransactionController {
     @Autowired
     private final TransactionCheck check;
 
-<<<<<<< HEAD
-   public TransactionController(TransactionCheck check) {
-=======
+
     public TransactionController(TransactionCheck check) {
->>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
+
         this.check = check;
     }
 
@@ -54,17 +52,14 @@ public class TransactionController {
                 (transaction.getFromAccount() != transaction.getToUserAccount()) &&
                 (currentBalance.compareTo(transaction.getTransactionAmount()) >= 0)) {
 */
-        if(check.checkTransaction(transaction)){
+        if (check.checkTransaction(transaction)) {
             accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
             accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
             Transaction transaction1 = transactionDao.create(transaction);
             return transaction1;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-<<<<<<< HEAD
-        }
-=======
->>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
+
         }
     }
 

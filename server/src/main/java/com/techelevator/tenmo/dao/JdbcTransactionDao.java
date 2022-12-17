@@ -37,17 +37,13 @@ public class JdbcTransactionDao implements TransactionDao{
                 transaction.getTransactionAmount(), transaction.getStatus());
 
 
-<<<<<<< HEAD
+
             return getTransaction(transaction_id);
         }
             //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
 
-=======
-        return getTransaction(transaction_id);
-
-    }
     //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
->>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
+
 
 
     @Override

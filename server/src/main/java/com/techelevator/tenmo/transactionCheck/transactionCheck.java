@@ -16,10 +16,7 @@ public class TransactionCheck {
     //increase receiver
     //decrease sender
     //update transactiontable
-<<<<<<< HEAD
-=======
 
->>>>>>> 358b8010229c53e2103274a0810a61f744c46e93
 @Autowired
     private AccountDAO dao;
     //public TransactionCheck(AccountDAO dao) { this.dao = dao; }   ???? ask about that part????
