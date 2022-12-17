@@ -43,6 +43,7 @@ CREATE SEQUENCE seq_transaction_id
   	from_user_account int NOT NULL,
   	to_user_account int NOT NULL,
   	transaction_amount decimal(13, 2) NOT NULL,
+  	transaction_status varchar (50) NOT NULL,
   	CONSTRAINT PK_transaction PRIMARY KEY (transaction_id),
   	CONSTRAINT FK_transaction_to_account FOREIGN KEY (from_user_account) REFERENCES account (account_id),
   	CONSTRAINT FK_transaction_account FOREIGN KEY (to_user_account) REFERENCES account (account_id)
@@ -64,11 +65,12 @@ VALUES (1001, 1000),
        (1003, 1400),
        (1004, 600);
 
-INSERT INTO transaction (from_user_account, to_user_account, transaction_amount)
-VALUES (2001, 2002, 500),
-       (2002, 2003, 300),
-       (2003, 2004, 1000),
-       (2003, 2001, 300);
+INSERT INTO transaction (from_user_account, to_user_account, transaction_amount, transaction_status)
+VALUES (2001, 2002, 500, 'APPROVED'),
+       (2002, 2003, 300, 'APPROVED'),
+       (2003, 2004, 1000, 'APPROVED'),
+       (2003, 2001, 300, 'APPROVED'),
+       (2001, 2004, 800, 'APPROVED');
 
 
 COMMIT;

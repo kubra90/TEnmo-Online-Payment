@@ -32,7 +32,7 @@ public class JdbcAccountDAO implements AccountDAO{
 
     @Override
     public Account getAccountBalanceByAccountId(int accountId) {
-        Account account = null; // rather than new Account use it!!
+        Account account = new Account(); // rather than new Account use it!!
         String sql = "SELECT * FROM account WHERE account_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
         if(result.next()){
