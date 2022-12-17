@@ -1,17 +1,12 @@
 package com.techelevator.tenmo.transactionCheck;
 
 import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.JdbcAccountDAO;
-import com.techelevator.tenmo.dao.TransactionDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.util.List;
 
 
 @Component
@@ -21,11 +16,8 @@ public class TransactionCheck {
     //increase receiver
     //decrease sender
     //update transactiontable
-<<<<<<< HEAD
-    @Autowired
-=======
+
 @Autowired
->>>>>>> caead57d6f7dada6323787e49191447d2f3572d8
     private AccountDAO dao;
     //public TransactionCheck(AccountDAO dao) { this.dao = dao; }   ???? ask about that part????
 
