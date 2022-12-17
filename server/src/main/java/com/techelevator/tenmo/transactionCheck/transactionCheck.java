@@ -3,7 +3,6 @@ package com.techelevator.tenmo.transactionCheck;
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transaction;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
