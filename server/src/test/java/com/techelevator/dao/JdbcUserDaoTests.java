@@ -56,7 +56,7 @@ public class JdbcUserDaoTests extends BaseDaoTests{
     public void find_id_by_username(){
 
         int actualId = sut.findIdByUsername("nicolas");
-        (1001, actualId);
+       // (1001, actualId);
     }
 
 }
