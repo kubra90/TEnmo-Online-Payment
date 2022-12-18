@@ -92,8 +92,19 @@ public class JdbcTransactionDao implements TransactionDao{
 
     }
 
+    @Override
+    public List<Transaction> getTransactionsbyAccountId(int senderId) {
+        List<Transaction> transactionList = new ArrayList<>();
+        String sql = "SELECT * from transaction WHERE "+
+                "from_user_account = ?;";
 
-
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, senderId);
+        while(results.next()){
+            Transaction transaction = mapRowToTransaction(results);
+            transactionList.add(transaction);
+        }
+        return  transactionList;
+    }
 
 
     private Transaction mapRowToTransaction(SqlRowSet rowSet) {

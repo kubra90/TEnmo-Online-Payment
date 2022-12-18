@@ -17,7 +17,7 @@ public class TransactionCheck {
     //decrease sender
     //update transactiontable
 
-@Autowired
+    @Autowired
     private AccountDAO dao;
     //public TransactionCheck(AccountDAO dao) { this.dao = dao; }   ???? ask about that part????
 
@@ -26,14 +26,32 @@ public class TransactionCheck {
     public boolean checkTransaction(Transaction transaction) {
 
         int accountId = transaction.getFromAccount();
-        Account account =dao.getAccountBalanceByAccountId(accountId);
+        Account account = dao.getAccountByAccountId(accountId);
         BigDecimal currentBalance = account.getBalance();
         if (transaction.getTransactionAmount().compareTo(BigDecimal.ZERO) == 1 &&
                 (transaction.getFromAccount() != transaction.getToUserAccount()) &&
-                (currentBalance.compareTo(transaction.getTransactionAmount()) >= 0)){
+                (currentBalance.compareTo(transaction.getTransactionAmount()) >= 0)) {
             return true;
-        }else{
+        } else {
             return false;
         }
+    }
+
+    private void checkBalanceByIncrease(Transaction transaction) {
+        dao.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
+    }
+
+    private void checkBalanceByDecrease(Transaction transaction) {
+        dao.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+    }
+
+    public boolean performTransaction(Transaction transaction) {
+        if (checkTransaction(transaction)) {
+            checkBalanceByIncrease(transaction);
+            checkBalanceByDecrease(transaction);
+            return true;
+        }
+        return false;
+
     }
 }

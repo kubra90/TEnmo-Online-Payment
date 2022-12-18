@@ -52,9 +52,10 @@ public class TransactionController {
                 (transaction.getFromAccount() != transaction.getToUserAccount()) &&
                 (currentBalance.compareTo(transaction.getTransactionAmount()) >= 0)) {
 */
-        if (check.checkTransaction(transaction)) {
-            accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
-            accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+        //if (check.checkTransaction(transaction)) {
+           // accountDAO.addBalance(transaction.getTransactionAmount(), transaction.getToUserAccount());
+            //accountDAO.substractBalance(transaction.getTransactionAmount(), transaction.getFromAccount());
+        if(check.performTransaction(transaction)) {
             Transaction transaction1 = transactionDao.create(transaction);
             return transaction1;
         } else {

@@ -1,7 +1,9 @@
 package com.techelevator.dao;
 
 
+import com.techelevator.tenmo.dao.JdbcAccountDAO;
 import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,6 +11,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.net.UnknownServiceException;
 import java.util.List;
 
@@ -20,11 +23,13 @@ public class JdbcUserDaoTests extends BaseDaoTests{
     private static final User USER_4 = new User(1004, "daniel", "123456", "USER");
 
     private JdbcUserDao sut;
+    private JdbcAccountDAO sut2;
 
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         sut = new JdbcUserDao(jdbcTemplate);
+        sut2 = new JdbcAccountDAO(jdbcTemplate);
     }
 
     @Test
@@ -44,6 +49,8 @@ public class JdbcUserDaoTests extends BaseDaoTests{
 
     }
 
+
+
     @Test
     public void findAllUsersBySize(){
         List<User> allUsers = sut.findAll();
@@ -53,7 +60,18 @@ public class JdbcUserDaoTests extends BaseDaoTests{
     @Test
     public void find_id_by_username(){
         int actualId = sut.findIdByUsername("bob");
-        Assert.assertEquals(1001, actualId);
+        Assert.assertEquals(USER_1.getId(), actualId);
+    }
+
+    @Test
+    public void create_new_user_with_the_balance(){
+        boolean Usercreated  =sut.create("nate", "password");
+        Assert.assertTrue(Usercreated);
+        User user = sut.findByUsername("nate");
+        Account account =sut2.getAccountByUserId(user.getId());
+        BigDecimal balance  =account.getBalance();
+        Assert.assertTrue(BigDecimal.valueOf(1000).compareTo(balance) == 0);
+
     }
 
 }

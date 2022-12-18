@@ -36,7 +36,7 @@ public class AccountController {
         Account account;
         User user = userDao.findByUsername(principal.getName());
         int userId = user.getId();
-        account = accountDao.getAccountBalance(userId);
+        account = accountDao.getAccountByUserId(userId);
         if (account == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found!");
         }

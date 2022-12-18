@@ -14,4 +14,6 @@ public interface TransactionDao {
 
     List<Transaction>  getTransactionsByUserName(String name);
 
+    List<Transaction> getTransactionsbyAccountId(int senderId);
+
 }
